@@ -1,0 +1,29 @@
+{
+    "name": "@vendure/paypal-plugin",
+    "version": "3.6.4",
+    "description": "PayPal HTTP payment integration for Vendure",
+    "license": "GPL-3.0-or-later",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib/**/*"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vendurehq/vendure"
+    },
+    "scripts": {
+        "watch": "tsc -p ./tsconfig.build.json --watch",
+        "build": "rimraf lib && tsc -p ./tsconfig.build.json"
+    },
+    "homepage": "https://www.vendure.io/",
+    "publishConfig": {
+        "access": "public"
+    },
+    "devDependencies": {
+        "@vendure/common": "3.6.4",
+        "@vendure/core": "3.6.4",
+        "rimraf": "^5.0.5",
+        "typescript": "5.8.2"
+    }
+}
