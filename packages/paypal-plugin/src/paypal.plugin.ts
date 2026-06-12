@@ -4,6 +4,7 @@ import { adminApiExtensions } from './admin-api-extensions';
 import { PAYPAL_PLUGIN_OPTIONS } from './constants';
 import { PayPalHttpClient } from './http-client/paypal-http.client';
 import { paypalPaymentHandler } from './payment-handler/paypal-payment.handler';
+import { paypalPaymentProcess } from './payment-handler/paypal-payment.process';
 import { PayPalReportingResolver } from './reporting/paypal-reporting.resolver';
 import { PayPalReportingService } from './reporting/paypal-reporting.service';
 import { PayPalShipmentTrackingService } from './shipment-tracking/paypal-shipment-tracking.service';
@@ -33,6 +34,10 @@ import { PayPalPluginOptions } from './types';
     compatibility: '^3.0.0',
     configuration: config => {
         config.paymentOptions.paymentMethodHandlers.push(paypalPaymentHandler);
+        config.paymentOptions.process = [
+            ...(config.paymentOptions.process ?? []),
+            paypalPaymentProcess,
+        ];
         return config;
     },
 })

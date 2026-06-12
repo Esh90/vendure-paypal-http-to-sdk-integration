@@ -15,7 +15,7 @@ const loggerCtx = 'PayPalShipmentTrackingService';
 
 /**
  * Listens for fulfillment state transitions to 'Shipped' and pushes the
- * tracking number to the PayPal capture via POST /v1/shipping/trackers-batch.
+ * tracking number to the PayPal capture via POST /v2/checkout/orders/{id}/track.
  *
  * Only fires for orders that have a settled PayPal payment with a
  * paypalCaptureId in metadata — non-PayPal orders are silently skipped.
@@ -105,6 +105,7 @@ export class PayPalShipmentTrackingService implements OnApplicationBootstrap, On
                     carrier,
                     notify_payer: false,
                 },
+                `track-${captureId}-${fulfillment.id}`,
             );
 
             Logger.info(

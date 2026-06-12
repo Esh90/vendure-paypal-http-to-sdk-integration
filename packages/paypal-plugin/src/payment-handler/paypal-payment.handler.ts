@@ -8,9 +8,13 @@ import {
     LanguageCode,
     Logger,
     PaymentMethodHandler,
+    PaymentState,
     SettlePaymentErrorResult,
     SettlePaymentResult,
 } from '@vendure/core';
+
+// Pulls in the AwaitingApproval PaymentStates augmentation.
+import './paypal-payment.process';
 
 import { PayPalApiError, PayPalHttpClient } from '../http-client/paypal-http.client';
 import {
@@ -153,9 +157,19 @@ export const paypalPaymentHandler = new PaymentMethodHandler({
                 loggerCtx,
             );
 
+            // CAPTURE intent: return Authorized so the order moves to PaymentAuthorized
+            // while the buyer is redirected to PayPal for approval.
+            //
+            // AUTHORIZE intent: return AwaitingApproval so the order stays in
+            // ArrangingPayment. At this point the PayPal order exists but no funds are
+            // reserved — the buyer has not yet visited PayPal. The order only moves to
+            // PaymentAuthorized once settlePayment runs after the buyer approves.
+            const initialState: Exclude<PaymentState, 'Error'> =
+                intent === 'AUTHORIZE' ? 'AwaitingApproval' : 'Authorized';
+
             return {
                 amount,
-                state: 'Authorized' as const,
+                state: initialState,
                 transactionId: paypalOrder.id,
                 metadata: {
                     paypalOrderId: paypalOrder.id,
